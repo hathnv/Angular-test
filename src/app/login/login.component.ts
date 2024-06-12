@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.users = this.route.snapshot.data.users;
@@ -37,15 +37,20 @@ export class LoginComponent implements OnInit {
     let { email, password } = this.loginForm.value;
     let user = this.users.find((u) => u.username == email);
 
+    console.log(user, password)
+
     if (!user) {
       return this.toastr.error('No user found!');
     }
 
-    if (!user.status) {
-      return this.toastr.error('Please contact Admin to login!');
-    }
+    // if (!user.status) {
+    //   return this.toastr.error('Please contact Admin to login!');
+    // }
 
     let pass = Md5.hashStr(password);
+
+    console.log(pass);
+
 
     if (pass == user.passwordHash) {
       return this.auth.login(user);

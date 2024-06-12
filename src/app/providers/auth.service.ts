@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class AuthService {
   public isAuthenticatedSubject = new ReplaySubject<boolean>(0);
   public isAuthenticatedCheck = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   populate(): any {
     const user = localStorage.getItem('user');
@@ -44,9 +44,9 @@ export class AuthService {
     this.router.navigateByUrl('/login');
   }
 
-  updateUser(body) {
+  updateUser(params: { id: string | number }, body) {
     return this.http.put(
-      environment.api_url + '/login/update/' + body.id,
+      environment.api_url + '/login/' + params.id,
       body
     );
   }

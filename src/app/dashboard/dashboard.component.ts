@@ -44,9 +44,9 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private auth: AuthService
-  ) {}
+  ) { }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   ngOnInit(): void {
     this.exams = this.route.snapshot.data.exams;
@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit {
     let payload: IExam = { ...exam };
     payload.details.status = status;
 
-    this.auth.updateUser({ ...user, status }).subscribe(
+    this.auth.updateUser({ id: user.id }, { ...user, status }).subscribe(
       (data) => {
         console.log(data);
         this.toastr.success('Successfully Updated User');

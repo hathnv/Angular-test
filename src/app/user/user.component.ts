@@ -27,7 +27,7 @@ export class UserComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private auth: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.exams = this.route.snapshot.data.exams;
@@ -36,13 +36,8 @@ export class UserComponent implements OnInit {
       this.user = this.exams[0];
     }
 
-    let user = this.auth.getLoggedInUser();
-
     this.passwordChangeForm = this.fb.group(
       {
-        id: [user.id, Validators.required],
-        username: [user.username, Validators.required],
-        role: [user.role, Validators.required],
         password: [null, Validators.required],
         retype_password: [null, Validators.required],
       },
@@ -57,12 +52,13 @@ export class UserComponent implements OnInit {
       return alert('form is not valid');
     }
 
-    let { password } = this.passwordChangeForm.value;
+    const user = this.auth.getLoggedInUser();
+    const { password } = this.passwordChangeForm.value;
 
     this.auth
-      .updateUser({
-        ...this.passwordChangeForm.value,
-        passwordHash: Md5.hashStr(password),
+      .updateUser({ id: user.id }, {
+        ...user,
+        passwordHash: Md5.hashStr(password)
       })
       .subscribe((data) => {
         this.toastr.success('your password is changed. please login again');
